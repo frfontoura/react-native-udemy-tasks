@@ -4,6 +4,7 @@ import moment from "moment";
 import "moment/locale/pt-br";
 import todayImage from "../../assets/imgs/today.jpg";
 import commonStyles from "../commonStyle";
+import Task from "../components/Task";
 
 export default function Agenda() {
   return (
@@ -20,9 +21,26 @@ export default function Agenda() {
       </ImageBackground>
 
       <View style={styles.tasksContainer}>
-        <Text>Tarefa 1</Text>
-        <Text>Tarefa 2</Text>
-        <Text>Tarefa 3</Text>
+        <Task desc={"Tarefa 1"} doneAt={null} estimateAt={new Date()} />
+        <Task desc={"Tarefa 2"} doneAt={new Date()} estimateAt={new Date()} />
+        <Task desc={"Tarefa 3"} doneAt={null} estimateAt={new Date()} />
+        <Task desc={"Tarefa 4"} doneAt={new Date()} estimateAt={new Date()} />
+        <Task desc={"Tarefa 1"} doneAt={null} estimateAt={new Date()} />
+        <Task desc={"Tarefa 2"} doneAt={new Date()} estimateAt={new Date()} />
+        <Task desc={"Tarefa 3"} doneAt={null} estimateAt={new Date()} />
+        <Task desc={"Tarefa 4"} doneAt={new Date()} estimateAt={new Date()} />
+        <Task desc={"Tarefa 1"} doneAt={null} estimateAt={new Date()} />
+        <Task desc={"Tarefa 2"} doneAt={new Date()} estimateAt={new Date()} />
+        <Task desc={"Tarefa 3"} doneAt={null} estimateAt={new Date()} />
+        <Task desc={"Tarefa 4"} doneAt={new Date()} estimateAt={new Date()} />
+        <Task desc={"Tarefa 1"} doneAt={null} estimateAt={new Date()} />
+        <Task desc={"Tarefa 2"} doneAt={new Date()} estimateAt={new Date()} />
+        <Task desc={"Tarefa 3"} doneAt={null} estimateAt={new Date()} />
+        <Task desc={"Tarefa 4"} doneAt={new Date()} estimateAt={new Date()} />
+        <Task desc={"Tarefa 1"} doneAt={null} estimateAt={new Date()} />
+        <Task desc={"Tarefa 2"} doneAt={new Date()} estimateAt={new Date()} />
+        <Task desc={"Tarefa 3"} doneAt={null} estimateAt={new Date()} />
+        <Task desc={"Tarefa 4"} doneAt={new Date()} estimateAt={new Date()} />
       </View>
     </View>
   );
