@@ -1,18 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ImageBackground,
-  FlatList
+  FlatList,
+  TouchableOpacity,
+  Platform
 } from "react-native";
 import moment from "moment";
 import "moment/locale/pt-br";
 import todayImage from "../../assets/imgs/today.jpg";
 import commonStyles from "../commonStyle";
 import Task from "../components/Task";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function Agenda() {
+  const [visibleTasks, setVisibleTasks] = useState([]);
+  const [showDoneTasks, setShowDoneTasks] = useState(true);
   const [tasks, setTasks] = useState([
     {
       id: Math.random(),
@@ -28,18 +33,42 @@ export default function Agenda() {
     }
   ]);
 
+  useEffect(filterTasks, []);
+  useEffect(filterTasks, [showDoneTasks, tasks]);
+
+  function filterTasks() {
+    let filtered = null;
+    if (showDoneTasks) {
+      filtered = [...tasks];
+    } else {
+      filtered = tasks.filter(task => task.doneAt === null);
+    }
+    setVisibleTasks(filtered);
+  }
+
   function toggleTask(id) {
-    setTasks(tasks.map(task => {
-      if (task.id === id) {
-        task.doneAt = task.doneAt ? null : new Date();
-      }
-      return task;
-    }));
+    setTasks(
+      tasks.map(task => {
+        if (task.id === id) {
+          task.doneAt = task.doneAt ? null : new Date();
+        }
+        return task;
+      })
+    );
   }
 
   return (
     <View style={styles.container}>
       <ImageBackground source={todayImage} style={styles.background}>
+        <View style={styles.iconBar}>
+          <TouchableOpacity onPress={() => setShowDoneTasks(!showDoneTasks)}>
+            <Icon
+              name={showDoneTasks ? "eye" : "eye-slash"}
+              size={20}
+              color={commonStyles.colors.secondary}
+            />
+          </TouchableOpacity>
+        </View>
         <View style={styles.titleBar}>
           <Text style={styles.title}>Hoje</Text>
           <Text style={styles.subtitle}>
@@ -52,7 +81,7 @@ export default function Agenda() {
 
       <View style={styles.tasksContainer}>
         <FlatList
-          data={tasks}
+          data={visibleTasks}
           keyExtractor={item => `${item.id}`}
           renderItem={({ item }) => <Task {...item} toggleTask={toggleTask} />}
         />
@@ -88,5 +117,11 @@ const styles = StyleSheet.create({
   },
   tasksContainer: {
     flex: 7
+  },
+  iconBar: {
+    marginTop: Platform.OS === 'ios' ? 30 : 10,
+    marginHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
   }
 });
