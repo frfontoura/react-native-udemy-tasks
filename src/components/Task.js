@@ -1,11 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import moment from "moment";
 import "moment/locale/pt-br";
 import commonStyles from "../commonStyle";
 
-export default function Task({ doneAt, desc, estimateAt }) {
+export default function Task({ id, doneAt, desc, estimateAt, toggleTask }) {
   const descStyle =
     doneAt !== null ? { textDecorationLine: "line-through" } : {};
 
@@ -23,9 +23,11 @@ export default function Task({ doneAt, desc, estimateAt }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.checkContainer}>
-        <Check />
-      </View>
+      <TouchableWithoutFeedback onPress={() => toggleTask(id)}>
+        <View style={styles.checkContainer}>
+          <Check />
+        </View>
+      </TouchableWithoutFeedback>
       <View>
         <Text style={[styles.description, descStyle]}>{desc}</Text>
         <Text style={styles.date}>

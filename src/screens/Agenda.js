@@ -25,8 +25,17 @@ export default function Agenda() {
       desc: "Concluir o curso",
       estimateAt: new Date(),
       doneAt: null
-    },
+    }
   ]);
+
+  function toggleTask(id) {
+    setTasks(tasks.map(task => {
+      if (task.id === id) {
+        task.doneAt = task.doneAt ? null : new Date();
+      }
+      return task;
+    }));
+  }
 
   return (
     <View style={styles.container}>
@@ -45,7 +54,7 @@ export default function Agenda() {
         <FlatList
           data={tasks}
           keyExtractor={item => `${item.id}`}
-          renderItem={({ item }) => <Task {...item} />}
+          renderItem={({ item }) => <Task {...item} toggleTask={toggleTask} />}
         />
       </View>
     </View>
