@@ -1,5 +1,11 @@
-import React from "react";
-import { View, Text, StyleSheet, ImageBackground } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  FlatList
+} from "react-native";
 import moment from "moment";
 import "moment/locale/pt-br";
 import todayImage from "../../assets/imgs/today.jpg";
@@ -7,6 +13,21 @@ import commonStyles from "../commonStyle";
 import Task from "../components/Task";
 
 export default function Agenda() {
+  const [tasks, setTasks] = useState([
+    {
+      id: Math.random(),
+      desc: "Comprar curso React Native",
+      estimateAt: new Date(),
+      doneAt: new Date()
+    },
+    {
+      id: Math.random(),
+      desc: "Concluir o curso",
+      estimateAt: new Date(),
+      doneAt: null
+    },
+  ]);
+
   return (
     <View style={styles.container}>
       <ImageBackground source={todayImage} style={styles.background}>
@@ -21,26 +42,11 @@ export default function Agenda() {
       </ImageBackground>
 
       <View style={styles.tasksContainer}>
-        <Task desc={"Tarefa 1"} doneAt={null} estimateAt={new Date()} />
-        <Task desc={"Tarefa 2"} doneAt={new Date()} estimateAt={new Date()} />
-        <Task desc={"Tarefa 3"} doneAt={null} estimateAt={new Date()} />
-        <Task desc={"Tarefa 4"} doneAt={new Date()} estimateAt={new Date()} />
-        <Task desc={"Tarefa 1"} doneAt={null} estimateAt={new Date()} />
-        <Task desc={"Tarefa 2"} doneAt={new Date()} estimateAt={new Date()} />
-        <Task desc={"Tarefa 3"} doneAt={null} estimateAt={new Date()} />
-        <Task desc={"Tarefa 4"} doneAt={new Date()} estimateAt={new Date()} />
-        <Task desc={"Tarefa 1"} doneAt={null} estimateAt={new Date()} />
-        <Task desc={"Tarefa 2"} doneAt={new Date()} estimateAt={new Date()} />
-        <Task desc={"Tarefa 3"} doneAt={null} estimateAt={new Date()} />
-        <Task desc={"Tarefa 4"} doneAt={new Date()} estimateAt={new Date()} />
-        <Task desc={"Tarefa 1"} doneAt={null} estimateAt={new Date()} />
-        <Task desc={"Tarefa 2"} doneAt={new Date()} estimateAt={new Date()} />
-        <Task desc={"Tarefa 3"} doneAt={null} estimateAt={new Date()} />
-        <Task desc={"Tarefa 4"} doneAt={new Date()} estimateAt={new Date()} />
-        <Task desc={"Tarefa 1"} doneAt={null} estimateAt={new Date()} />
-        <Task desc={"Tarefa 2"} doneAt={new Date()} estimateAt={new Date()} />
-        <Task desc={"Tarefa 3"} doneAt={null} estimateAt={new Date()} />
-        <Task desc={"Tarefa 4"} doneAt={new Date()} estimateAt={new Date()} />
+        <FlatList
+          data={tasks}
+          keyExtractor={item => `${item.id}`}
+          renderItem={({ item }) => <Task {...item} />}
+        />
       </View>
     </View>
   );
