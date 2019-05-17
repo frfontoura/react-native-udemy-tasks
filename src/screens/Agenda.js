@@ -66,13 +66,13 @@ export default function Agenda() {
     clone.push({
       id: Math.random(),
       desc: task.desc,
-      estimateAt: task.date,
+      estimateAt: task.estimateAt,
       doneAt: null
     });
 
     setTasks(clone);
     setShowAddTask(false);
-  };
+  }
 
   return (
     <View style={styles.container}>
@@ -111,9 +111,7 @@ export default function Agenda() {
 
       <ActionButton
         buttonColor={commonStyles.colors.today}
-        onPress={() => {
-          setShowAddTask(true);
-        }}
+        onPress={() => setShowAddTask(true)}
       />
     </View>
   );

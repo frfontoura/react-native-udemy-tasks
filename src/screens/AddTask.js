@@ -15,31 +15,35 @@ import {
 import moment from "moment";
 import commonStyles from "../commonStyles";
 
-const initialState = { desc: "", date: new Date() };
+const initialState = { desc: "", estimateAt: new Date() };
 
 export default function AddTask({ isVisible, onSave, onCancel }) {
-  const [data, setData] = useState(initialState);
+  const [desc, setDesc] = useState(initialState.desc);
+  const [estimateAt, setEstimateAt] = useState(initialState.estimateAt);
 
   function save() {
-    if (!data.desc && !data.desc.trim()) {
+    if (!desc.trim()) {
       Alert.alert("Dados inválidos", "Informe uma descrição para a tarefa");
       return;
     }
 
+    const data = { desc, estimateAt }
     onSave(data);
-    setData(initialState);
+
+    setDesc(initialState.desc);
+    setEstimateAt(initialState.estimateAt);
   }
 
   function handleDateAndroidChanged() {
     DatePickerAndroid.open({
-      date: data.date
+      date: estimateAt
     }).then(e => {
       if (e.action !== DatePickerAndroid.dismissedAction) {
-        const momentDate = moment(data.date);
+        const momentDate = moment(estimateAt);
         momentDate.date(e.day);
         momentDate.month(e.month);
         momentDate.year(e.year);
-        setData({ date: momentDate.toDate() });
+        setEstimateAt(momentDate.toDate());
       }
     });
   }
@@ -50,15 +54,15 @@ export default function AddTask({ isVisible, onSave, onCancel }) {
       datePicker = (
         <DatePickerIOS
           mode="date"
-          date={data.date}
-          onDateChange={dt => setData({ dt })}
+          date={estimateAt}
+          onDateChange={date => setEstimateAt(date)}
         />
       );
     } else {
       datePicker = (
         <TouchableOpacity onPress={handleDateAndroidChanged}>
           <Text style={styles.date}>
-            {moment(data.date).format("ddd, D [de] MMMM [de] YYYY")}
+            {moment(estimateAt).format("ddd, D [de] MMMM [de] YYYY")}
           </Text>
         </TouchableOpacity>
       );
@@ -81,8 +85,8 @@ export default function AddTask({ isVisible, onSave, onCancel }) {
         <TextInput
           placeholder="Descrição..."
           style={styles.input}
-          onChangeText={dsc => setData({ dsc })}
-          value={data.desc}
+          onChangeText={dsc => setDesc(dsc)}
+          value={desc}
         />
         <DatePicker />
         <View
