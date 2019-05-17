@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import moment from "moment";
 import "moment/locale/pt-br";
-import commonStyles from "../commonStyle";
+import commonStyles from "../commonStyles";
 
 export default function Task({ id, doneAt, desc, estimateAt, toggleTask }) {
   const descStyle =

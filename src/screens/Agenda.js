@@ -10,14 +10,18 @@ import {
 } from "react-native";
 import moment from "moment";
 import "moment/locale/pt-br";
-import todayImage from "../../assets/imgs/today.jpg";
-import commonStyles from "../commonStyle";
-import Task from "../components/Task";
 import Icon from "react-native-vector-icons/FontAwesome";
+import ActionButton from "react-native-action-button";
+
+import AddTask from "./AddTask";
+import todayImage from "../../assets/imgs/today.jpg";
+import commonStyles from "../commonStyles";
+import Task from "../components/Task";
 
 export default function Agenda() {
   const [visibleTasks, setVisibleTasks] = useState([]);
   const [showDoneTasks, setShowDoneTasks] = useState(true);
+  const [showAddTask, setShowAddTask] = useState(false);
   const [tasks, setTasks] = useState([
     {
       id: Math.random(),
@@ -57,8 +61,26 @@ export default function Agenda() {
     );
   }
 
+  function addTask(task) {
+    const clone = [...tasks];
+    clone.push({
+      id: Math.random(),
+      desc: task.desc,
+      estimateAt: task.date,
+      doneAt: null
+    });
+
+    setTasks(clone);
+    setShowAddTask(false);
+  };
+
   return (
     <View style={styles.container}>
+      <AddTask
+        isVisible={showAddTask}
+        onSave={addTask}
+        onCancel={() => setShowAddTask(false)}
+      />
       <ImageBackground source={todayImage} style={styles.background}>
         <View style={styles.iconBar}>
           <TouchableOpacity onPress={() => setShowDoneTasks(!showDoneTasks)}>
@@ -86,6 +108,13 @@ export default function Agenda() {
           renderItem={({ item }) => <Task {...item} toggleTask={toggleTask} />}
         />
       </View>
+
+      <ActionButton
+        buttonColor={commonStyles.colors.today}
+        onPress={() => {
+          setShowAddTask(true);
+        }}
+      />
     </View>
   );
 }
@@ -119,9 +148,9 @@ const styles = StyleSheet.create({
     flex: 7
   },
   iconBar: {
-    marginTop: Platform.OS === 'ios' ? 30 : 10,
+    marginTop: Platform.OS === "ios" ? 30 : 10,
     marginHorizontal: 20,
-    flexDirection: 'row',
-    justifyContent: 'flex-end'
+    flexDirection: "row",
+    justifyContent: "flex-end"
   }
 });
