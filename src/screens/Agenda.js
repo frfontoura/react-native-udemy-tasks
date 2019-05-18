@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Platform
 } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 import moment from "moment";
 import "moment/locale/pt-br";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -20,25 +21,33 @@ import Task from "../components/Task";
 
 export default function Agenda() {
   const [visibleTasks, setVisibleTasks] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [showDoneTasks, setShowDoneTasks] = useState(true);
   const [showAddTask, setShowAddTask] = useState(false);
-  const [tasks, setTasks] = useState([
-    {
-      id: Math.random(),
-      desc: "Comprar curso React Native",
-      estimateAt: new Date(),
-      doneAt: new Date()
-    },
-    {
-      id: Math.random(),
-      desc: "Concluir o curso",
-      estimateAt: new Date(),
-      doneAt: null
-    }
-  ]);
+  const [loaded, setLoaded] = useState(false);
 
-  useEffect(filterTasks, []);
   useEffect(filterTasks, [showDoneTasks, tasks]);
+
+  useEffect(() => {
+    updateStorage();
+  }, [tasks]);
+
+  useEffect(() => {
+    loadTasks();
+  }, []);
+
+  async function updateStorage() {
+    if (loaded) {
+      await AsyncStorage.setItem("@tasks_tasks", JSON.stringify(tasks));
+    }
+  }
+
+  async function loadTasks() {
+    const data = await AsyncStorage.getItem("@tasks_tasks");
+    const loadedTasks = JSON.parse(data) || [];
+    setTasks(loadedTasks);
+    setLoaded(true);
+  }
 
   function filterTasks() {
     let filtered = null;
