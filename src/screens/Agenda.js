@@ -74,6 +74,10 @@ export default function Agenda() {
     setShowAddTask(false);
   }
 
+  function deleteTask(id) {
+    setTasks(tasks.filter(task => task.id !== id));
+  }
+
   return (
     <View style={styles.container}>
       <AddTask
@@ -105,7 +109,9 @@ export default function Agenda() {
         <FlatList
           data={visibleTasks}
           keyExtractor={item => `${item.id}`}
-          renderItem={({ item }) => <Task {...item} toggleTask={toggleTask} />}
+          renderItem={({ item }) => (
+            <Task {...item} onToggleTask={toggleTask} onDelete={deleteTask} />
+          )}
         />
       </View>
 

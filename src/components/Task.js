@@ -1,11 +1,26 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  TouchableOpacity
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import Swipeable from "react-native-swipeable";
 import moment from "moment";
 import "moment/locale/pt-br";
+
 import commonStyles from "../commonStyles";
 
-export default function Task({ id, doneAt, desc, estimateAt, toggleTask }) {
+export default function Task({
+  id,
+  doneAt,
+  desc,
+  estimateAt,
+  onToggleTask,
+  onDelete
+}) {
   const descStyle =
     doneAt !== null ? { textDecorationLine: "line-through" } : {};
 
@@ -21,22 +36,48 @@ export default function Task({ id, doneAt, desc, estimateAt, toggleTask }) {
     }
   }
 
-  return (
-    <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={() => toggleTask(id)}>
-        <View style={styles.checkContainer}>
-          <Check />
-        </View>
-      </TouchableWithoutFeedback>
-      <View>
-        <Text style={[styles.description, descStyle]}>{desc}</Text>
-        <Text style={styles.date}>
-          {moment(estimateAt)
-            .locale("pt-br")
-            .format("ddd, D [de] MMMM")}
-        </Text>
-      </View>
+  const leftContent = (
+    <View style={styles.exclude}>
+      <Icon name="trash" size={20} color="#FFF" />
+      <Text style={styles.excludeText}>Excluir</Text>
     </View>
+  );
+
+  const rightContent = [
+    <TouchableOpacity
+      style={[
+        styles.exclude,
+        { justifyContent: "flex-start", paddingLeft: 20 }
+      ]}
+      onPress={() => onDelete(id)}
+    >
+      <Icon name="trash" size={30} color="#FFF" />
+    </TouchableOpacity>
+  ];
+
+  return (
+    <Swipeable
+      leftActionActivationDistance={200}
+      onLeftActionActivate={() => onDelete(id)}
+      leftContent={leftContent}
+      rightButtons={rightContent}
+    >
+      <View style={styles.container}>
+        <TouchableWithoutFeedback onPress={() => onToggleTask(id)}>
+          <View style={styles.checkContainer}>
+            <Check />
+          </View>
+        </TouchableWithoutFeedback>
+        <View>
+          <Text style={[styles.description, descStyle]}>{desc}</Text>
+          <Text style={styles.date}>
+            {moment(estimateAt)
+              .locale("pt-br")
+              .format("ddd, D [de] MMMM")}
+          </Text>
+        </View>
+      </View>
+    </Swipeable>
   );
 }
 
@@ -76,5 +117,18 @@ const styles = StyleSheet.create({
     fontFamily: commonStyles.fontFamily,
     color: commonStyles.colors.subText,
     fontSize: 12
+  },
+  exclude: {
+    flex: 1,
+    backgroundColor: "red",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center"
+  },
+  excludeText: {
+    fontFamily: commonStyles.fontFamily,
+    color: "#FFF",
+    fontSize: 20,
+    margin: 10
   }
 });

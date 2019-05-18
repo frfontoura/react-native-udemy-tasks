@@ -27,7 +27,7 @@ export default function AddTask({ isVisible, onSave, onCancel }) {
       return;
     }
 
-    const data = { desc, estimateAt }
+    const data = { desc, estimateAt };
     onSave(data);
 
     setDesc(initialState.desc);
