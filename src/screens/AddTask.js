@@ -15,11 +15,14 @@ import {
 import moment from "moment";
 import commonStyles from "../commonStyles";
 
-const initialState = { desc: "", estimateAt: new Date() };
-
 export default function AddTask({ isVisible, onSave, onCancel }) {
-  const [desc, setDesc] = useState(initialState.desc);
-  const [estimateAt, setEstimateAt] = useState(initialState.estimateAt);
+  const [desc, setDesc] = useState("");
+  const [estimateAt, setEstimateAt] = useState(new Date());
+
+  function resetState() {
+    setDesc("");
+    setEstimateAt(new Date());
+  }
 
   function save() {
     if (!desc.trim()) {
@@ -30,8 +33,7 @@ export default function AddTask({ isVisible, onSave, onCancel }) {
     const data = { desc, estimateAt };
     onSave(data);
 
-    setDesc(initialState.desc);
-    setEstimateAt(initialState.estimateAt);
+    resetState();
   }
 
   function handleDateAndroidChanged() {
@@ -76,6 +78,7 @@ export default function AddTask({ isVisible, onSave, onCancel }) {
       visible={isVisible}
       animationType="slide"
       transparent={true}
+      onShow={() => resetState}
     >
       <TouchableWithoutFeedback onPress={onCancel}>
         <View style={styles.offset} />
