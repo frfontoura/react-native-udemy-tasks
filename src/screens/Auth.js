@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -15,6 +15,7 @@ import commonStyles from "../commonStyles";
 import backgroundImage from "../../assets/imgs/login.jpg";
 
 export default function Auth({ navigation }) {
+  const [validForm, setValidForm] = useState(false);
   const [state, setState] = useState({
     stageNew: false,
     name: "",
@@ -22,6 +23,8 @@ export default function Auth({ navigation }) {
     password: "",
     confirmPassword: ""
   });
+
+  useEffect(validateForm, [state]);
 
   async function signin() {
     try {
@@ -63,6 +66,21 @@ export default function Auth({ navigation }) {
     } else {
       signin();
     }
+  }
+
+  function validateForm() {
+    const validations = [];
+
+    validations.push(state.email && state.email.includes("@"));
+    validations.push(state.password && state.password.length >= 3);
+
+    if (state.stageNew) {
+      validations.push(state.name && state.name.trim());
+      validations.push(state.confirmPassword);
+      validations.push(state.password === state.confirmPassword);
+    }
+
+    setValidForm(validations.reduce((all, v) => all && v));
   }
 
   return (
@@ -108,10 +126,15 @@ export default function Auth({ navigation }) {
             }
           />
         )}
-        <TouchableOpacity onPress={signinOrSignup}>
-          <View style={[styles.button]}>
+        <TouchableOpacity disabled={!validForm} onPress={signinOrSignup}>
+          <View
+            style={[
+              styles.button,
+              !validForm ? { backgroundColor: "#AAA" } : {}
+            ]}
+          >
             <Text style={styles.buttonText}>
-              {state.stageNew ? "Registrar" : "Entrar"}
+              {state.stageNew ? "Registrar" : "Entrar"} {validForm ? 'true' : 'false'}
             </Text>
           </View>
         </TouchableOpacity>

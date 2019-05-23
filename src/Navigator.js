@@ -6,11 +6,12 @@ const MainRoutes = createStackNavigator({
   Auth: {
     name: "Auth",
     screen: Auth,
-    navigationOptions: {headerTransparent: true}
+    navigationOptions: { header: null }
   },
   Home: {
     name: "Home",
-    screen: Agenda
+    screen: Agenda,
+    navigationOptions: { header: null }
   }
 });
 
