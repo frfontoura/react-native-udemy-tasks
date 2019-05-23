@@ -134,7 +134,7 @@ export default function Auth({ navigation }) {
             ]}
           >
             <Text style={styles.buttonText}>
-              {state.stageNew ? "Registrar" : "Entrar"} {validForm ? 'true' : 'false'}
+              {state.stageNew ? "Registrar" : "Entrar"}
             </Text>
           </View>
         </TouchableOpacity>
