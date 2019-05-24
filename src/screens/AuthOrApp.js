@@ -1,13 +1,10 @@
 import React, { useEffect } from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
-import axios from "axios";
+import { NavigationEvents } from "react-navigation";
 import AsyncStorage from "@react-native-community/async-storage";
+import axios from "axios";
 
 export default function AuthOrApp({ navigation }) {
-  useEffect(() => {
-    check();
-  }, []);
-
   async function check() {
     const json = await AsyncStorage.getItem("userData");
     const userData = JSON.parse(json) || {};
@@ -24,6 +21,7 @@ export default function AuthOrApp({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <NavigationEvents onWillFocus={() => check()} />
       <ActivityIndicator size="large" />
     </View>
   );

@@ -4,20 +4,21 @@ import {
   View,
   Text,
   StyleSheet,
-  AsyncStorage,
   TouchableOpacity
 } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 import { Gravatar } from "react-native-gravatar";
 import { DrawerItems } from "react-navigation";
 import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome";
+
 import commonStyles from "../commonStyles";
 
 export default function Menu(props) {
   
-  const logout = () => {
+  async function logout() {
     delete axios.defaults.headers.common["Authorization"];
-    AsyncStorage.removeItem("userData");
+    await AsyncStorage.removeItem("userData");
     props.navigation.navigate("Loading");
   };
 
