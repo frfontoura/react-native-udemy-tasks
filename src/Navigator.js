@@ -5,6 +5,7 @@ import {
   createDrawerNavigator
 } from "react-navigation";
 
+import AuthOrApp from "./screens/AuthOrApp";
 import Menu from "./screens/Menu";
 import Agenda from "./screens/Agenda";
 import Auth from "./screens/Auth";
@@ -60,6 +61,10 @@ const MenuNavigator = createDrawerNavigator(MenuRoutes, MenuConfig);
 
 const MainRoutes = createStackNavigator(
   {
+    Loading: {
+      name: "Loading",
+      screen: AuthOrApp
+    },
     Auth: {
       name: "Auth",
       screen: Auth
@@ -76,7 +81,7 @@ const MainRoutes = createStackNavigator(
 );
 
 const MainNavigator = createAppContainer(MainRoutes, {
-  initialRouteName: "Auth"
+  initialRouteName: "Loading"
 });
 
 export default MainNavigator;
