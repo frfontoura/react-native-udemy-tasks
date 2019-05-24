@@ -14,13 +14,19 @@ import "moment/locale/pt-br";
 import Icon from "react-native-vector-icons/FontAwesome";
 import ActionButton from "react-native-action-button";
 
-import todayImage from "../../assets/imgs/today.jpg";
 import commonStyles from "../commonStyles";
 import { server, showError } from "../common";
 import Task from "../components/Task";
 import AddTask from "./AddTask";
 
-export default function Agenda() {
+import todayImage from "../../assets/imgs/today.jpg";
+import tomorrowImage from "../../assets/imgs/tomorrow.jpg";
+import weekImage from "../../assets/imgs/week.jpg";
+import monthImage from "../../assets/imgs/month.jpg";
+
+export default function Agenda({ daysAhead, navigation, title }) {
+  const [styleColor, setStyleColor] = useState(commonStyles.colors.today);
+  const [image, setImage] = useState(todayImage);
   const [visibleTasks, setVisibleTasks] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [showDoneTasks, setShowDoneTasks] = useState(true);
@@ -30,11 +36,14 @@ export default function Agenda() {
 
   useEffect(() => {
     loadTasks();
-  }, []);
+    configureStyle();
+  }, [daysAhead]);
 
   async function loadTasks() {
     try {
-      const maxDate = moment().format("YYYY-MM-DD 23:59");
+      const maxDate = moment()
+        .add({ days: daysAhead })
+        .format("YYYY-MM-DD 23:59");
       const res = await axios.get(`${server}/tasks?date=${maxDate}`);
       setTasks(res.data);
     } catch (err) {
@@ -83,6 +92,27 @@ export default function Agenda() {
     }
   }
 
+  function configureStyle() {
+    switch (daysAhead) {
+      case 0:
+        setStyleColor(commonStyles.colors.today);
+        setImage(todayImage);
+        break;
+      case 1:
+        setStyleColor(commonStyles.colors.tomorrow);
+        setImage(tomorrowImage);
+        break;
+      case 7:
+        setStyleColor(commonStyles.colors.week);
+        setImage(weekImage);
+        break;
+      default:
+        setStyleColor(commonStyles.colors.month);
+        setImage(monthImage);
+        break;
+    }
+  }
+
   return (
     <View style={styles.container}>
       <AddTask
@@ -90,8 +120,11 @@ export default function Agenda() {
         onSave={addTask}
         onCancel={() => setShowAddTask(false)}
       />
-      <ImageBackground source={todayImage} style={styles.background}>
+      <ImageBackground source={image} style={styles.background}>
         <View style={styles.iconBar}>
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <Icon name="bars" size={20} color={commonStyles.colors.secondary} />
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => setShowDoneTasks(!showDoneTasks)}>
             <Icon
               name={showDoneTasks ? "eye" : "eye-slash"}
@@ -101,7 +134,7 @@ export default function Agenda() {
           </TouchableOpacity>
         </View>
         <View style={styles.titleBar}>
-          <Text style={styles.title}>Hoje</Text>
+          <Text style={styles.title}>{title}</Text>
           <Text style={styles.subtitle}>
             {moment()
               .locale("pt-br")
@@ -121,7 +154,7 @@ export default function Agenda() {
       </View>
 
       <ActionButton
-        buttonColor={commonStyles.colors.today}
+        buttonColor={styleColor}
         onPress={() => setShowAddTask(true)}
       />
     </View>
@@ -160,6 +193,6 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === "ios" ? 30 : 10,
     marginHorizontal: 20,
     flexDirection: "row",
-    justifyContent: "flex-end"
+    justifyContent: "space-between"
   }
 });
